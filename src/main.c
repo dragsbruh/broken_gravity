@@ -190,6 +190,7 @@ void Exportable() {
                 WHITE
             });
         }
+        UnloadImage(image);
     }
 
     #ifdef USE_SHADER
