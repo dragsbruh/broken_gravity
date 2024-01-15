@@ -1,5 +1,5 @@
 .vscode
 tmp
 gravity.exe
-frames/*.png
+frames
 output.mp4
