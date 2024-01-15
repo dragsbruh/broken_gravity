@@ -12,6 +12,8 @@ Uh this doesnt work like gravity but it looks cool. First C & Raylib "project" b
 
 ## Export
 
+[Exported example](/examples/1600x900%2060fps%2033s.mp4)
+
 Make sure to create a `frames` directory using `mkdir frames`
 
 Run the simulation. It will look weird and will have low fps, but it will create frame images.
