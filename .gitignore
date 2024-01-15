@@ -1,0 +1,5 @@
+.vscode
+tmp
+gravity.exe
+frames/*.png
+output.mp4
