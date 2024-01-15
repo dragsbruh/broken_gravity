@@ -1,8 +1,7 @@
 #include <math.h>
-#include <stdio.h>
 #include <raylib.h>
+#include <stdio.h>
 #include <stdlib.h>
-
 #include <config.h>
 
 #ifdef USE_SHADER
@@ -105,15 +104,7 @@ void update(World *world, float dt) {
     #endif
     DrawText(TextFormat("Nodes: %d", world->size), 10, 10, 10, WHITE);
     EndTextureMode();
-
-    BeginDrawing();
-    DrawTextureRec(target.texture, (Rectangle){ 0, 0, (float)target.texture.width, (float)-target.texture.height }, (Vector2){ 0, 0 }, WHITE);
-    
-    EndDrawing();
 }
-
-// DrawText(TextFormat("Nodes: %d", world->size), 10, 10, 20, RAYWHITE);
-// DrawFPS(10, 35);
 
 void Interactive() {
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE);
@@ -136,6 +127,9 @@ void Interactive() {
 
         update(&world, dt);
         
+        BeginDrawing();
+        DrawTextureRec(target.texture, (Rectangle){ 0, 0, (float)target.texture.width, (float)-target.texture.height }, (Vector2){ 0, 0 }, WHITE);
+        EndDrawing();
     }
 
     #ifdef USE_SHADER
@@ -146,7 +140,7 @@ void Interactive() {
 }
 
 void Exportable() {
-    InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE);
+    InitWindow(800, 200, TextFormat("Export: %s", WINDOW_TITLE));
     
     World world;
     world_init(&world);
@@ -159,9 +153,6 @@ void Exportable() {
     float dt = (float)1/(float)EXPORT_FPS;
     int finishedFrames = 0;
     int targetNumFrames = EXPORT_FPS * EXPORT_TIME_SEC;
-
-    printf("Exporting at %dfps. Frames to be rendered: %d\n", EXPORT_FPS, targetNumFrames);
-    printf("Export video length: %d\n", EXPORT_TIME_SEC);
 
     for (int i = 0; i < EXPORT_DEFAULT_WORLD_SIZE; i++) {
         world_create_node(&world, (Node){
@@ -177,6 +168,16 @@ void Exportable() {
     while (finishedFrames < targetNumFrames && !WindowShouldClose()) {
         update(&world, dt);
         finishedFrames++;
+        
+        BeginDrawing();
+        ClearBackground(BLACK);
+        
+
+        DrawText(TextFormat("Export Framerate: %d\n", EXPORT_FPS), 10, 10, 20, WHITE);
+        DrawText(TextFormat("Export frames: %d\n", targetNumFrames), 10, 30, 20, WHITE);
+        DrawText(TextFormat("Export video length: %d\n", EXPORT_TIME_SEC), 10, 50, 20, WHITE);
+        DrawText(TextFormat("Export progress: %d/%d", finishedFrames,targetNumFrames), 10, 80, 40, WHITE);
+        EndDrawing();
         Image image = LoadImageFromTexture(target.texture);
         ExportImage(image, TextFormat("frames\\%d.png", finishedFrames));
         if (finishedFrames % (EXPORT_FPS * EXPORT_CREATE_NODES_EVERY) == 0) {
@@ -189,7 +190,6 @@ void Exportable() {
                 WHITE
             });
         }
-        // printf("\r%d\% (%d/%d)", (int)((float)finishedFrames/(float)targetNumFrames), finishedFrames, targetNumFrames);
     }
 
     #ifdef USE_SHADER
